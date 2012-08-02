@@ -15,6 +15,10 @@
  */
 package org.pixmob.freemobile.netstat.gae.web.v1;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,6 +28,8 @@ import org.pixmob.freemobile.netstat.gae.repo.DeviceNotFoundException;
 import org.pixmob.freemobile.netstat.gae.repo.DeviceStat;
 import org.pixmob.freemobile.netstat.gae.repo.DeviceStatRepository;
 
+import com.google.appengine.api.memcache.Expiration;
+import com.google.appengine.api.memcache.MemcacheService;
 import com.google.inject.Inject;
 import com.google.sitebricks.client.transport.Json;
 import com.google.sitebricks.headless.Reply;
@@ -39,16 +45,25 @@ import com.google.sitebricks.http.Get;
 public class NetworkUsageChart {
     private final Logger logger = Logger.getLogger(NetworkUsageChart.class.getName());
     private final DeviceStatRepository dsr;
+    private final MemcacheService memcacheService;
 
     @Inject
-    NetworkUsageChart(final DeviceStatRepository dsr) {
+    NetworkUsageChart(final DeviceStatRepository dsr, final MemcacheService memcacheService) {
         this.dsr = dsr;
+        this.memcacheService = memcacheService;
     }
 
     @Get
     public Reply<?> networkUsage(Request req) {
-        logger.info("Compute values for network usage chart");
-        final NetworkUsage nu = computeNetworkUsage();
+        final String networkUsageKey = "networkUsage";
+        NetworkUsage nu = (NetworkUsage) memcacheService.get(networkUsageKey);
+        if (nu == null) {
+            logger.info("Compute values for network usage chart");
+            nu = computeNetworkUsage();
+            memcacheService.put(networkUsageKey, nu, Expiration.byDeltaSeconds(60 * 30));
+        } else {
+            logger.info("Get network usage from cache");
+        }
 
         // Add cache headers to the response.
         final int cacheDuration = 60 * 60 * 2; // in seconds
@@ -88,11 +103,23 @@ public class NetworkUsageChart {
      * JSON data class for network usage.
      * @author Pixmob
      */
-    public static class NetworkUsage {
+    public static class NetworkUsage implements Externalizable {
         public int orange;
         public int freeMobile;
 
         public NetworkUsage() {
+        }
+
+        @Override
+        public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+            orange = in.readInt();
+            freeMobile = in.readInt();
+        }
+
+        @Override
+        public void writeExternal(ObjectOutput out) throws IOException {
+            out.writeInt(orange);
+            out.writeInt(freeMobile);
         }
 
         @Override
