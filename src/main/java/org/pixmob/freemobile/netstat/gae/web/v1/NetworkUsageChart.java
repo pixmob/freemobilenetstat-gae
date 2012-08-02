@@ -104,22 +104,22 @@ public class NetworkUsageChart {
      * @author Pixmob
      */
     public static class NetworkUsage implements Externalizable {
-        public int orange;
-        public int freeMobile;
+        public long orange;
+        public long freeMobile;
 
         public NetworkUsage() {
         }
 
         @Override
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-            orange = in.readInt();
-            freeMobile = in.readInt();
+            orange = in.readLong();
+            freeMobile = in.readLong();
         }
 
         @Override
         public void writeExternal(ObjectOutput out) throws IOException {
-            out.writeInt(orange);
-            out.writeInt(freeMobile);
+            out.writeLong(orange);
+            out.writeLong(freeMobile);
         }
 
         @Override
