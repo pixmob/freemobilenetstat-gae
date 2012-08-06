@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+    <cron>
+        <url>/task/update-charts</url>
+        <description>Update chart values</description>
+        <schedule>every 30 minutes from 09:00 to 23:59</schedule>
+    </cron>
+</cronentries>

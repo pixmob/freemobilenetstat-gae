@@ -20,13 +20,11 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import org.pixmob.freemobile.netstat.gae.repo.DeviceNotFoundException;
-import org.pixmob.freemobile.netstat.gae.repo.DeviceStat;
-import org.pixmob.freemobile.netstat.gae.repo.DeviceStatRepository;
+import org.pixmob.freemobile.netstat.gae.Constants;
+import org.pixmob.freemobile.netstat.gae.repo.ChartDataRepository;
 
 import com.google.appengine.api.memcache.Expiration;
 import com.google.appengine.api.memcache.MemcacheService;
@@ -44,12 +42,12 @@ import com.google.sitebricks.http.Get;
  */
 public class NetworkUsageChart {
     private final Logger logger = Logger.getLogger(NetworkUsageChart.class.getName());
-    private final DeviceStatRepository dsr;
+    private final ChartDataRepository cdr;
     private final MemcacheService memcacheService;
 
     @Inject
-    NetworkUsageChart(final DeviceStatRepository dsr, final MemcacheService memcacheService) {
-        this.dsr = dsr;
+    NetworkUsageChart(final ChartDataRepository cdr, final MemcacheService memcacheService) {
+        this.cdr = cdr;
         this.memcacheService = memcacheService;
     }
 
@@ -58,8 +56,10 @@ public class NetworkUsageChart {
         final String networkUsageKey = "networkUsage";
         NetworkUsage nu = (NetworkUsage) memcacheService.get(networkUsageKey);
         if (nu == null) {
-            logger.info("Compute values for network usage chart");
-            nu = computeNetworkUsage();
+            logger.info("Get network usage from datastore");
+            nu = new NetworkUsage();
+            nu.orange = cdr.get(Constants.NETWORK_USAGE_ORANGE, 0);
+            nu.freeMobile = cdr.get(Constants.NETWORK_USAGE_FREE_MOBILE, 0);
             memcacheService.put(networkUsageKey, nu, Expiration.byDeltaSeconds(60 * 30));
         } else {
             logger.info("Get network usage from cache");
@@ -73,30 +73,6 @@ public class NetworkUsageChart {
         headers.put("Age", "0");
 
         return Reply.with(nu).as(Json.class).headers(headers);
-    }
-
-    private NetworkUsage computeNetworkUsage() {
-        final long fromDate = System.currentTimeMillis() - 86400 * 1000 * 7;
-        final Iterator<DeviceStat> i;
-        try {
-            i = dsr.getAll(fromDate, null);
-        } catch (DeviceNotFoundException e) {
-            throw new RuntimeException("Unexpected error", e);
-        }
-
-        final NetworkUsage nu = new NetworkUsage();
-        while (i.hasNext()) {
-            final DeviceStat ds = i.next();
-            final long total = ds.timeOnOrange + ds.timeOnFreeMobile;
-            if (total < 3600 * 1000 * 3) {
-                // Skip device statistics if there is not enough data.
-                continue;
-            }
-            nu.orange += ds.timeOnOrange;
-            nu.freeMobile += ds.timeOnFreeMobile;
-        }
-
-        return nu;
     }
 
     /**

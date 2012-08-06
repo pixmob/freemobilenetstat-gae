@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<queue-entries>
+    <total-storage-limit>1M</total-storage-limit>
+    <queue>
+        <name>default</name>
+        <rate>4/h</rate>
+        <max-concurrent-requests>2</max-concurrent-requests>
+    </queue>
+</queue-entries>

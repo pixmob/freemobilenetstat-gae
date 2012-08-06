@@ -16,7 +16,7 @@
 package org.pixmob.freemobile.netstat.gae;
 
 import org.pixmob.freemobile.netstat.gae.repo.RepositoryModule;
-import org.pixmob.freemobile.netstat.gae.web.v1.WebModule;
+import org.pixmob.freemobile.netstat.gae.web.WebModule;
 
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;

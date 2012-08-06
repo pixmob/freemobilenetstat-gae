@@ -15,21 +15,16 @@
  */
 package org.pixmob.freemobile.netstat.gae.repo;
 
-import com.google.inject.AbstractModule;
-import com.googlecode.objectify.ObjectifyService;
+import javax.persistence.Id;
 
 /**
- * Guice repository configuration.
+ * Chart value datastore entity.
  * @author Pixmob
  */
-public class RepositoryModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        ObjectifyService.register(Device.class);
-        ObjectifyService.register(DeviceStat.class);
-        ObjectifyService.register(ChartData.class);
-
-        bind(DeviceRepository.class);
-        bind(DeviceStatRepository.class);
-    }
+public class ChartData {
+    @Id
+    Long id;
+    public long date;
+    public String name;
+    public long value;
 }

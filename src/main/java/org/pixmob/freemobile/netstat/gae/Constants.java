@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.pixmob.freemobile.netstat.gae.repo;
-
-import com.google.inject.AbstractModule;
-import com.googlecode.objectify.ObjectifyService;
+package org.pixmob.freemobile.netstat.gae;
 
 /**
- * Guice repository configuration.
+ * Application constants.
  * @author Pixmob
  */
-public class RepositoryModule extends AbstractModule {
-    @Override
-    protected void configure() {
-        ObjectifyService.register(Device.class);
-        ObjectifyService.register(DeviceStat.class);
-        ObjectifyService.register(ChartData.class);
+public final class Constants {
+    public static final String NETWORK_USAGE_ORANGE = "networkUsage.orange";
+    public static final String NETWORK_USAGE_FREE_MOBILE = "networkUsage.freeMobile";
 
-        bind(DeviceRepository.class);
-        bind(DeviceStatRepository.class);
+    private Constants() {
     }
 }
