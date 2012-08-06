@@ -29,7 +29,7 @@ public class DeviceStat {
     @Id
     Long id;
     @Parent
-    Key<Device> device;
+    public Key<Device> device;
     @Indexed
     public long date;
     public long timeOnOrange;

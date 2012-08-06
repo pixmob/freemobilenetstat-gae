@@ -20,8 +20,10 @@ package org.pixmob.freemobile.netstat.gae;
  * @author Pixmob
  */
 public final class Constants {
-    public static final String NETWORK_USAGE_ORANGE = "networkUsage.orange";
-    public static final String NETWORK_USAGE_FREE_MOBILE = "networkUsage.freeMobile";
+    public static final int NETWORK_USAGE_DAYS = 7;
+    public static final String CHART_NETWORK_USAGE_USERS = "networkUsage.users";
+    public static final String CHART_NETWORK_USAGE_ORANGE = "networkUsage.orange";
+    public static final String CHART_NETWORK_USAGE_FREE_MOBILE = "networkUsage.freeMobile";
 
     private Constants() {
     }

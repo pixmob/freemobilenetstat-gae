@@ -58,8 +58,10 @@ public class NetworkUsageChart {
         if (nu == null) {
             logger.info("Get network usage from datastore");
             nu = new NetworkUsage();
-            nu.orange = cdr.get(Constants.NETWORK_USAGE_ORANGE, 0);
-            nu.freeMobile = cdr.get(Constants.NETWORK_USAGE_FREE_MOBILE, 0);
+            nu.orange = cdr.get(Constants.CHART_NETWORK_USAGE_ORANGE, 0);
+            nu.freeMobile = cdr.get(Constants.CHART_NETWORK_USAGE_FREE_MOBILE, 0);
+            nu.users = (int) cdr.get(Constants.CHART_NETWORK_USAGE_USERS, 0);
+            nu.days = Constants.NETWORK_USAGE_DAYS;
             memcacheService.put(networkUsageKey, nu, Expiration.byDeltaSeconds(60 * 30));
         } else {
             logger.info("Get network usage from cache");
@@ -82,6 +84,8 @@ public class NetworkUsageChart {
     public static class NetworkUsage implements Externalizable {
         public long orange;
         public long freeMobile;
+        public int users;
+        public int days;
 
         public NetworkUsage() {
         }
@@ -90,17 +94,21 @@ public class NetworkUsageChart {
         public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
             orange = in.readLong();
             freeMobile = in.readLong();
+            users = in.readInt();
+            days = in.readInt();
         }
 
         @Override
         public void writeExternal(ObjectOutput out) throws IOException {
             out.writeLong(orange);
             out.writeLong(freeMobile);
+            out.writeInt(users);
+            out.writeInt(days);
         }
 
         @Override
         public String toString() {
-            return "orange=" + orange + ", freeMobile=" + freeMobile;
+            return "orange=" + orange + ", freeMobile=" + freeMobile + ", users=" + users + ", days=" + days;
         }
     }
 }

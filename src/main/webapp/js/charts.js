@@ -11,6 +11,9 @@ function loadData() {
 }
 
 function drawChart(jsonData) {
+    users = jsonData["users"];
+    $("#users").append(users);
+
     onOrange = jsonData["orange"];
     onFreeMobile = jsonData["freeMobile"];
 

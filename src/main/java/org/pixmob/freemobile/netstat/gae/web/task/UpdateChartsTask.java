@@ -15,7 +15,9 @@
  */
 package org.pixmob.freemobile.netstat.gae.web.task;
 
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.pixmob.freemobile.netstat.gae.Constants;
@@ -58,7 +60,7 @@ public class UpdateChartsTask {
     private void computeNetworkUsage() {
         logger.info("Updating network usage chart values");
 
-        final long fromDate = System.currentTimeMillis() - 86400 * 1000 * 7;
+        final long fromDate = System.currentTimeMillis() - 86400 * 1000 * Constants.NETWORK_USAGE_DAYS;
         final Iterator<DeviceStat> i;
         try {
             i = dsr.getAll(fromDate, null);
@@ -68,6 +70,7 @@ public class UpdateChartsTask {
 
         long totalOrange = 0;
         long totalFreeMobile = 0;
+        final Set<String> deviceIds = new HashSet<String>(256);
         while (i.hasNext()) {
             final DeviceStat ds = i.next();
             final long total = ds.timeOnOrange + ds.timeOnFreeMobile;
@@ -77,9 +80,11 @@ public class UpdateChartsTask {
             }
             totalOrange += ds.timeOnOrange;
             totalFreeMobile += ds.timeOnFreeMobile;
+            deviceIds.add(ds.device.getName());
         }
 
-        cdr.put(Constants.NETWORK_USAGE_ORANGE, totalOrange);
-        cdr.put(Constants.NETWORK_USAGE_FREE_MOBILE, totalFreeMobile);
+        cdr.put(Constants.CHART_NETWORK_USAGE_USERS, deviceIds.size());
+        cdr.put(Constants.CHART_NETWORK_USAGE_ORANGE, totalOrange);
+        cdr.put(Constants.CHART_NETWORK_USAGE_FREE_MOBILE, totalFreeMobile);
     }
 }

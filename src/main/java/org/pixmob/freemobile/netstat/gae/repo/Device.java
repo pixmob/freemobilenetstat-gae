@@ -17,6 +17,9 @@ package org.pixmob.freemobile.netstat.gae.repo;
 
 import javax.persistence.Id;
 
+import com.googlecode.objectify.annotation.Cached;
+
+@Cached(expirationSeconds = 60)
 /**
  * User device datastore entity.
  * @author Pixmob
