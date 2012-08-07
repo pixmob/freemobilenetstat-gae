@@ -86,5 +86,8 @@ public class UpdateChartsTask {
         cdr.put(Constants.CHART_NETWORK_USAGE_USERS, deviceIds.size());
         cdr.put(Constants.CHART_NETWORK_USAGE_ORANGE, totalOrange);
         cdr.put(Constants.CHART_NETWORK_USAGE_FREE_MOBILE, totalFreeMobile);
+
+        logger.info("Network usage updated: " + deviceIds.size() + " active devices, " + totalOrange
+                + " ms on Orange, " + totalFreeMobile + " ms on Free Mobile");
     }
 }
