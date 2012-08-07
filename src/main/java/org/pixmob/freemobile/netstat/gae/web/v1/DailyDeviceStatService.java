@@ -15,6 +15,7 @@
  */
 package org.pixmob.freemobile.netstat.gae.web.v1;
 
+import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -63,6 +64,12 @@ public class DailyDeviceStatService {
 
         final Stat s = req.read(Stat.class).as(Json.class);
         logger.fine("Received device statistics: " + s);
+
+        final long total = s.timeOnFreeMobile + s.timeOnOrange;
+        if (total < 0 || total > 86400 * 1000) {
+            logger.warning("Invalid daily device statistics: " + s);
+            return Reply.saying().status(HttpURLConnection.HTTP_BAD_REQUEST);
+        }
 
         try {
             dsr.update(deviceId, d, s.timeOnOrange, s.timeOnFreeMobile);
