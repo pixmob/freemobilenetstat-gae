@@ -3,6 +3,6 @@
     <cron>
         <url>/task/update-charts</url>
         <description>Update chart values</description>
-        <schedule>every 30 minutes from 09:00 to 23:59</schedule>
+        <schedule>every 30 minutes from 05:00 to 23:00</schedule>
     </cron>
 </cronentries>
