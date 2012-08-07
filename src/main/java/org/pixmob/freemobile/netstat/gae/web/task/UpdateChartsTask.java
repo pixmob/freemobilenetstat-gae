@@ -73,11 +73,6 @@ public class UpdateChartsTask {
         final Set<String> deviceIds = new HashSet<String>(256);
         while (i.hasNext()) {
             final DeviceStat ds = i.next();
-            final long total = ds.timeOnOrange + ds.timeOnFreeMobile;
-            if (total < 3600 * 1000 * 3) {
-                // Skip device statistics if there is not enough data.
-                continue;
-            }
             totalOrange += ds.timeOnOrange;
             totalFreeMobile += ds.timeOnFreeMobile;
             deviceIds.add(ds.device.getName());
