@@ -14,6 +14,9 @@ function drawChart(jsonData) {
     users = jsonData["users"];
     $("#users").append(users);
 
+    days = jsonData["days"];
+    $("#days").append(days);
+
     onOrange = jsonData["orange"];
     onFreeMobile = jsonData["freeMobile"];
 
