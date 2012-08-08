@@ -15,7 +15,6 @@
  */
 package org.pixmob.freemobile.netstat.gae.web.v1;
 
-import java.net.HttpURLConnection;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +33,7 @@ import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Post;
+import com.ibm.icu.util.Calendar;
 
 @Service
 /**
@@ -66,9 +66,24 @@ public class DailyDeviceStatService {
         logger.fine("Received device statistics: " + s);
 
         final long total = s.timeOnFreeMobile + s.timeOnOrange;
-        if (total < 0 || total > 86400 * 1000) {
+
+        final Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DATE, -31);
+        final long minAge = cal.getTimeInMillis();
+
+        cal.add(Calendar.DATE, 31 + 1);
+        final long maxAge = cal.getTimeInMillis();
+
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("total=" + total + ", minAge=" + minAge + ", maxAge=" + maxAge + ", d=" + d);
+        }
+        if (total < 0 || total > 86400 * 1000 || d < minAge || d > maxAge) {
             logger.warning("Invalid daily device statistics: " + s);
-            return Reply.saying().status(HttpURLConnection.HTTP_BAD_REQUEST);
+            return Reply.saying().status(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         try {
