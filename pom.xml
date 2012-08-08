@@ -102,7 +102,7 @@
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-labs</artifactId>
             <version>${gae.version}</version>
-            <scope>test</scope>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.appengine</groupId>
