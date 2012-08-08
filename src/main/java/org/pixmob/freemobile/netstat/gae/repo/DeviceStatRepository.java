@@ -42,7 +42,7 @@ public class DeviceStatRepository extends DAOBase {
             throw new DeviceNotFoundException(deviceId);
         }
 
-        DeviceStat ds = ofy.query(DeviceStat.class).ancestor(ud).filter("date", date).get();
+        DeviceStat ds = ofy.query(DeviceStat.class).ancestor(ud).filter("date", date).limit(1).get();
         if (ds == null) {
             ds = new DeviceStat();
             ds.device = new Key<Device>(Device.class, deviceId);
@@ -69,9 +69,11 @@ public class DeviceStatRepository extends DAOBase {
             if (device == null) {
                 throw new DeviceNotFoundException(deviceId);
             }
-            deviceStats = ofy.query(DeviceStat.class).ancestor(device).filter("date >=", fromDate);
+            deviceStats = ofy.query(DeviceStat.class).ancestor(device).filter("date >=", fromDate)
+                    .prefetchSize(30).chunkSize(20);
         } else {
-            deviceStats = ofy.query(DeviceStat.class).filter("date >=", fromDate);
+            deviceStats = ofy.query(DeviceStat.class).filter("date >=", fromDate).prefetchSize(300)
+                    .chunkSize(300);
         }
 
         return deviceStats.iterator();
