@@ -30,6 +30,7 @@ import com.google.inject.Inject;
 import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Get;
+import com.google.sitebricks.http.Post;
 
 @Service
 /**
@@ -48,6 +49,7 @@ public class UpdateChartsTask {
     }
 
     @Get
+    @Post
     public Reply<?> updateCharts() {
         logger.info("Updating chart values");
 

@@ -15,6 +15,7 @@
  */
 package org.pixmob.freemobile.netstat.gae.web;
 
+import org.pixmob.freemobile.netstat.gae.web.cron.CronServlet;
 import org.pixmob.freemobile.netstat.gae.web.task.UpdateChartsTask;
 import org.pixmob.freemobile.netstat.gae.web.v1.DailyDeviceStatService;
 import org.pixmob.freemobile.netstat.gae.web.v1.DeviceService;
@@ -37,6 +38,7 @@ public class WebModule extends ServletModule {
         final AsyncCacheFilter asyncCacheFilter = new AsyncCacheFilter();
         filter("/task/*").through(asyncCacheFilter);
         filter("/1/*").through(asyncCacheFilter);
+        serve("/cron/*").with(new CronServlet());
 
         install(new SitebricksModule() {
             @Override

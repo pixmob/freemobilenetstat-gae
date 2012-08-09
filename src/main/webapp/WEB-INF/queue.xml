@@ -3,7 +3,7 @@
     <total-storage-limit>1M</total-storage-limit>
     <queue>
         <name>default</name>
-        <rate>4/h</rate>
+        <rate>1/m</rate>
         <max-concurrent-requests>2</max-concurrent-requests>
     </queue>
 </queue-entries>

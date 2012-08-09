@@ -41,6 +41,16 @@
         </auth-constraint>
     </security-constraint>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Private scheduler</web-resource-name>
+            <url-pattern>/cron/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
     <servlet>
         <servlet-name>appstats</servlet-name>
         <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
