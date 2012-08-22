@@ -7,7 +7,12 @@ google.load('visualization', '1.0', {
 google.setOnLoadCallback(loadData);
 
 function loadData() {
-    $.get("/1/chart/network-usage", drawChart);
+    $.get("/1/chart/network-usage", drawChart).error(dataLoadError);
+}
+
+function dataLoadError() {
+    $("#network-usage-spinner").empty();
+    $("#network-usage-spinner").append("Données non disponibles pour le moment");
 }
 
 function drawChart(jsonData) {
