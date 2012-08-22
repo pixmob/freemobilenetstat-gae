@@ -33,6 +33,9 @@ import com.googlecode.objectify.cache.AsyncCacheFilter;
 public class WebModule extends ServletModule {
     @Override
     protected void configureServlets() {
+        // Enable AppEngine statistics with AppStats.
+        install(new AppStatsModule());
+
         // An AsyncCacheFilter is required in order to use async datastore
         // queries with Objectify.
         final AsyncCacheFilter asyncCacheFilter = new AsyncCacheFilter();
