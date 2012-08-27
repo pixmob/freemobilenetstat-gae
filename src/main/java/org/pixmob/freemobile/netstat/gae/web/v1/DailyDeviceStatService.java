@@ -72,16 +72,25 @@ public class DailyDeviceStatService {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        cal.add(Calendar.DATE, -31);
+        cal.add(Calendar.DATE, -7);
         final long minAge = cal.getTimeInMillis();
 
-        cal.add(Calendar.DATE, 31 + 1);
+        cal.setTimeInMillis(System.currentTimeMillis());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DATE, 1);
         final long maxAge = cal.getTimeInMillis();
 
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("total=" + total + ", minAge=" + minAge + ", maxAge=" + maxAge + ", d=" + d);
         }
-        if (total < 0 || total > 86400 * 1000 || d < minAge || d > maxAge) {
+        if (d < minAge) {
+            logger.info("Discard old device statistics: " + s);
+            return Reply.saying().ok();
+        }
+        if (total < 0 || total > 86400 * 1000 || d > maxAge) {
             logger.warning("Invalid daily device statistics: " + s);
             return Reply.saying().status(HttpServletResponse.SC_BAD_REQUEST);
         }
