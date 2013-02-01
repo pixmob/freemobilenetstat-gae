@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.pixmob.freemobile.netstat.gae.repo.DeviceException;
 import org.pixmob.freemobile.netstat.gae.repo.DeviceRepository;
 
