@@ -15,17 +15,6 @@
  */
 package org.pixmob.freemobile.netstat.gae.web.v1;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.pixmob.freemobile.netstat.gae.repo.DeviceNotFoundException;
-import org.pixmob.freemobile.netstat.gae.repo.DeviceStatRepository;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.google.sitebricks.client.transport.Json;
@@ -33,7 +22,18 @@ import com.google.sitebricks.headless.Reply;
 import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Post;
-import com.ibm.icu.util.Calendar;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.pixmob.freemobile.netstat.gae.repo.DeviceNotFoundException;
+import org.pixmob.freemobile.netstat.gae.repo.DeviceStatRepository;
 
 @Service
 /**
