@@ -36,6 +36,9 @@ public class WebModule extends ServletModule {
         // Enable AppEngine statistics with AppStats.
         install(new AppStatsModule());
 
+        // Enable AppEngine Remote API.
+        install(new RemoteApiModule());
+
         // An AsyncCacheFilter is required in order to use async datastore
         // queries with Objectify.
         final AsyncCacheFilter asyncCacheFilter = new AsyncCacheFilter();
