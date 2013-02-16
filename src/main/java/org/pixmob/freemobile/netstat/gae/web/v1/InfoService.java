@@ -16,9 +16,14 @@
 package org.pixmob.freemobile.netstat.gae.web.v1;
 
 import com.google.sitebricks.headless.Reply;
+import com.google.sitebricks.headless.Request;
 import com.google.sitebricks.headless.Service;
 import com.google.sitebricks.http.Get;
 import com.google.sitebricks.http.Head;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 /**
@@ -26,13 +31,37 @@ import com.google.sitebricks.http.Head;
  * @author Pixmob
  */
 public class InfoService {
+    private static final Set< String> KNOWN_USER_AGENTS = new HashSet< String>(2);
+    static {
+        KNOWN_USER_AGENTS.add("FreeMobileNetstat/21");
+        KNOWN_USER_AGENTS.add("FreeMobileNetstat/22");
+    }
+
     @Head
-    public Reply<?> checkAvailability() {
+    public Reply< ?> checkAvailability(Request req) {
+        if (!isClientCompatible(req)) {
+            return Reply.saying().notFound();
+        }
         return Reply.saying().ok();
     }
 
     @Get
-    public Reply<?> getAvailability() {
+    public Reply< ?> getAvailability(Request req) {
+        if (!isClientCompatible(req)) {
+            return Reply.saying().notFound();
+        }
         return Reply.with("Server is up and running!").ok();
+    }
+
+    private boolean isClientCompatible(Request req) {
+        final Collection< String> userAgents = req.headers().get("User-Agent");
+        for (final String userAgent : userAgents) {
+            for (final String u : KNOWN_USER_AGENTS) {
+                if (userAgent.contains(u)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
